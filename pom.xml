@@ -6,5 +6,18 @@
   <artifactId>Game</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <configuration>
+          <overview>${basedir}/overview.html</overview>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
  
 </project>
