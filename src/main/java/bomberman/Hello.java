@@ -1,4 +1,4 @@
-package hu.elte.tools.game;
+package bomberman;
 
 public class Hello
 {

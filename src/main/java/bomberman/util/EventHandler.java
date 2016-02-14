@@ -1,4 +1,4 @@
-package hu.elte.tools.game.utils;
+package bomberman.util;
 
 /**
  * A simple class to handle events easily.

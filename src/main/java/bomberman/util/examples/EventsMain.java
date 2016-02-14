@@ -1,6 +1,6 @@
-package hu.elte.tools.game.utils.examples;
+package bomberman.util.examples;
 
-import hu.elte.tools.game.utils.*;
+import bomberman.util.*;
 
 public class EventsMain
 {

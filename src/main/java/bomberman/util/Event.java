@@ -1,9 +1,9 @@
-package hu.elte.tools.game.utils;
+package bomberman.util;
 
 import java.util.List;
 import java.util.LinkedList;
 
-import hu.elte.tools.game.utils.EventHandler;
+import bomberman.util.EventHandler;
 
 /**
  * A simple class to help handling any kind of event.
