@@ -11,7 +11,7 @@ public class EventHandler
 	 * @param sender the object, who created the event.
 	 * @param eventargs the arguments of the event.
 	 */
-	public void ActionPerformed(Object sender, Object eventargs)
+	public void actionPerformed(Object sender, Object eventargs)
 	{
 	}
 }

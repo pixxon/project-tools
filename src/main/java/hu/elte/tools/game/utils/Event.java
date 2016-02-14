@@ -1,6 +1,8 @@
 package hu.elte.tools.game.utils;
 
 import java.util.List;
+import java.util.LinkedList;
+
 import hu.elte.tools.game.utils.EventHandler;
 
 /**
@@ -13,6 +15,15 @@ public class Event
 	 *
 	 */
 	private List<EventHandler> listeners;
+	
+	/**
+	 * Constructor for Event.
+	 *
+	 */
+	public Event()
+	{
+		listeners = new LinkedList<EventHandler>();
+	}
 	
 	/**
 	 * Connect a new handler for the event.
@@ -43,7 +54,7 @@ public class Event
 	{
 		for(EventHandler listener : listeners)
 		{
-			listener.ActionPerformed(this, eventargs);
+			listener.actionPerformed(this, eventargs);
 		}
 	}
 }
