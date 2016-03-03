@@ -4,17 +4,17 @@ package bomberman.models;
  *
  * @author Imre
  */
-public class Field {
+public class Table {
     private Actor playField[][];
     private int defaultValue = 15;
     
-    public Field() {
+    public Table() {
         playField = new Actor[defaultValue][defaultValue];
         generateField(defaultValue);
     }
 
     
-    public Field(int size) {
+    public Table(int size) {
         if(size % 2 != 1)
             size++;
         playField = new Actor[size][size];
