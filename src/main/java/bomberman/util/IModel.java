@@ -1,6 +1,7 @@
 package bomberman.util;
  
 import bomberman.util.Event;
+import bomberman.util.Direction;
  
 /**
  * Abstract class for easier communication between modules
@@ -8,7 +9,7 @@ import bomberman.util.Event;
 public abstract class IModel
 {
 	/**
-	 * Invoked when game ended
+	 * Invoked when game ended or player died
 	 */
 	public Event GameOver;
 	
@@ -24,18 +25,18 @@ public abstract class IModel
 	
 	
 	/**
-	 * Called when a new game is started
+	 * Adds a new player to the game
 	 *
-	 * @param size size of the new game
+	 * @returns the identifier of the player
 	 */
-	abstract public void newGame(int size);
+	abstract public int newPlayer();
 	
 	/**
-	 * Adds a new player to the game
+	 * Disconnects player from the game
 	 *
 	 * @param ID the identifier of the player
 	 */
-	abstract public void newPlayer(int ID);
+	 abstract public int leavePlayer(int ID);
 	
 	/**
 	 * Called upon player movement
@@ -43,13 +44,12 @@ public abstract class IModel
 	 * @param ID the identifier of the player
 	 * @param dir the direction of move
 	 */
-	abstract public void movePlayer(int ID, int dir);
+	abstract public void movePlayer(int ID, Direction dir);
 	
 	/**
-	 * Placing a bomb at the given coordinates
+	 * Placing a bomb where the player stands
 	 *
-	 * @param x first coordinate of the bomb
-	 * @param y second coordinate of the bomb
+	 * @param ID the identifier of the player
 	 */
-	abstract public void placeBomb(int x, int y);
+	abstract public void placeBomb(int ID);
 }

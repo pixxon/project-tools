@@ -24,17 +24,17 @@ public abstract class IView
 	}
 	
 	/**
-	 * Invoked when game ended
+	 * Handler for models GameOver event.
 	 */
 	public EventHandler GameOverHandler;
 	
 	/**
-	 * Invoked when game advanced
+	 * Handler for models GameAdvanced event.
 	 */
 	public EventHandler GameAdvancedHandler;
 	
 	/**
-	 * Invoked when new game created
+	 * Handler for models GameCreated event.
 	 */
 	public EventHandler GameCreatedHandler;
 }
