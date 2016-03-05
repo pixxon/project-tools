@@ -10,8 +10,8 @@ Documentation: Javadocs
 Use Case:  
 ![alt tag](http://puu.sh/njY39/6db115d1c3.png)
 
-Classes:
+Classes:  
 ![alt tag](http://puu.sh/nvBon/a12423b0e6.png)
 
-Packages:
+Packages:  
 ![alt tag](http://puu.sh/nw2DE/b01e3c0824.png)
