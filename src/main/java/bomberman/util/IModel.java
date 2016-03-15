@@ -4,39 +4,23 @@ import bomberman.util.Event;
 import bomberman.util.Direction;
  
 /**
- * Abstract class for easier communication between modules
+ * Interface for easier communication between modules
  */
-public abstract class IModel
-{
-	/**
-	 * Invoked when game ended or player died
-	 */
-	public Event GameOver;
-	
-	/**
-	 * Invoked when game advanced
-	 */
-	public Event GameAdvanced;
-	
-	/**
-	 * Invoked when new game created
-	 */
-	public Event GameCreated;
-	
-	
+public interface IModel
+{	
 	/**
 	 * Adds a new player to the game
 	 *
 	 * @returns the identifier of the player
 	 */
-	abstract public int newPlayer();
+	public void newPlayer();
 	
 	/**
 	 * Disconnects player from the game
 	 *
 	 * @param ID the identifier of the player
 	 */
-	 abstract public int leavePlayer(int ID);
+	 public void leavePlayer(int ID);
 	
 	/**
 	 * Called upon player movement
@@ -44,12 +28,41 @@ public abstract class IModel
 	 * @param ID the identifier of the player
 	 * @param dir the direction of move
 	 */
-	abstract public void movePlayer(int ID, Direction dir);
+	public void movePlayer(int ID, Direction dir);
 	
 	/**
 	 * Placing a bomb where the player stands
 	 *
 	 * @param ID the identifier of the player
 	 */
-	abstract public void placeBomb(int ID);
+	public void placeBomb(int ID);
+	
+	
+	/**
+	 * Getter for PlayerID event
+	 *
+	 * @returns the event which stores the playerID
+	 */
+	public Event getPlayerID();
+	
+	/**
+	 * Getter for GameCreated event
+	 *
+	 * @returns The event which gets invoked when game ends
+	 */
+	public Event getGameCreated();
+	
+	/**
+	 * Getter for GameAdvanced event*
+	 *
+	 * @returns The event which gets invoked when game ends
+	 */
+	public Event getGameAdvanced();
+	
+	/**
+	 * Getter for GameOver event
+	 *
+	 * @returns The event which gets invoked when game ends
+	 */
+	public Event getGameOver();
 }
