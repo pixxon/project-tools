@@ -4,37 +4,33 @@ import bomberman.util.EventHandler;
 import bomberman.util.IModel;
  
 /**
- * Abstract class for easier communication between modules
+ * Interface for easier communication between modules.
  */
-public abstract class IView
-{
+public interface IView
+{	
 	/**
-	 * The connected model.
-	 */
-	protected IModel model;
-	
-	/**
-	 * Constructor to connect the model
+	 * Getter of the playerID events handler.
 	 *
-	 * @param model The reference of the model
+	 * @returns The event handler of playerID.
 	 */
-	public IView(IModel model)
-	{
-		this.model = model;
-	}
+	public EventHandler getPlayerIDHandler();
 	
 	/**
-	 * Handler for models GameOver event.
+	 * Getter for GameOverHandler.
+	 *
+	 * @returns Handler for models GameOver event.
 	 */
-	public EventHandler GameOverHandler;
+	public EventHandler getGameOverHandler();
 	
 	/**
-	 * Handler for models GameAdvanced event.
+	 * @returns Handler for models GameAdvanced event.
 	 */
-	public EventHandler GameAdvancedHandler;
+	public EventHandler getGameAdvancedHandler();
 	
 	/**
-	 * Handler for models GameCreated event.
+	 * Getter for GameCreatedHandler.
+	 *
+	 * @returns Handler for models GameCreated event.
 	 */
-	public EventHandler GameCreatedHandler;
+	public EventHandler getGameCreatedHandler();
 }
