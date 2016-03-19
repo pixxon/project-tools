@@ -39,7 +39,7 @@ public interface IModel
 	
 	
 	/**
-	 * Getter for PlayerID event
+	 * Getter for PlayerIDEventArg event
 	 *
 	 * @returns the event which stores the playerID
 	 */
