@@ -14,6 +14,7 @@ public interface IView
 	 * @returns The event handler of playerID.
 	 */
 	public EventHandler getPlayerIDHandler();
+
 	
 	/**
 	 * Getter for GameOverHandler.
