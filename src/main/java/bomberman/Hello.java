@@ -5,11 +5,11 @@ import bomberman.models.Table;
 
 public class Hello{
     public static void main(String[] args) {
-        Table f = new Table();
-        Actor[][] a = f.getField();
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                System.out.print("[" + a[i][j].getClass() + "]");
+        Table f = new Table(5);
+        Actor[][] a = f.getPlayField();
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length; j++) {
+                System.out.print("[" + a[i][j].getClass().getSimpleName() + "]");
             }
             System.out.println("\n");
         }
