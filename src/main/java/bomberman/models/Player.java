@@ -6,14 +6,16 @@ package bomberman.models;
  */
 public class Player extends Actor{
     
+    public static int PLAYER_ID;
+    
     private final int player_id;
     private boolean alive;
     private boolean bombInQue;
     private Bomb bomb;
 
-    public Player(int player_id, int posX, int posY) {
+    public Player(int posX, int posY) {
         super(posX, posY);
-        this.player_id = player_id;
+        this.player_id = PLAYER_ID;
         alive = true;
         destroyable = true;
     }
