@@ -1,4 +1,4 @@
-package bomberman.models;
+package bomberman.persistance;
 
 import java.util.ArrayList;
 import java.util.List;

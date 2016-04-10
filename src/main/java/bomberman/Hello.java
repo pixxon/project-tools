@@ -1,7 +1,7 @@
 package bomberman;
 
-import bomberman.models.Actor;
-import bomberman.models.Table;
+import bomberman.persistance.Actor;
+import bomberman.persistance.Table;
 
 public class Hello{
     public static void main(String[] args) {

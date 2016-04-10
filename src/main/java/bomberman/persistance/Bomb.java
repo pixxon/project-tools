@@ -1,4 +1,4 @@
-package bomberman.models;
+package bomberman.persistance;
 
 /**
  *
