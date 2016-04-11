@@ -3,7 +3,7 @@ package bomberman.util;
 /**
  * A simple class to handle events easily.
  */
-public class EventHandler
+public class GameEventHandler
 {
 	/**
 	 * The method called, when the event happened.
