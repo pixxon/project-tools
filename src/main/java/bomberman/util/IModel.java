@@ -39,30 +39,30 @@ public interface IModel
 	
 	
 	/**
-	 * Getter for PlayerID event
+	 * Getter for PlayerIDEventArg event
 	 *
 	 * @returns the event which stores the playerID
 	 */
-	public Event getPlayerID();
+	public GameEvent getPlayerID();
 	
 	/**
 	 * Getter for GameCreated event
 	 *
 	 * @returns The event which gets invoked when game ends
 	 */
-	public Event getGameCreated();
+	public GameEvent getGameCreated();
 	
 	/**
 	 * Getter for GameAdvanced event*
 	 *
 	 * @returns The event which gets invoked when game ends
 	 */
-	public Event getGameAdvanced();
+	public GameEvent getGameAdvanced();
 	
 	/**
 	 * Getter for GameOver event
 	 *
 	 * @returns The event which gets invoked when game ends
 	 */
-	public Event getGameOver();
+	public GameEvent getGameOver();
 }
