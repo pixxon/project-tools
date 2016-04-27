@@ -10,5 +10,15 @@ package bomberman.util.EventArgs;
  *
  */
 public class GameOverEventArg {
-    //TODO Customize for your own purposes/needs
+    
+	private boolean winner;
+
+	public GameOverEventArg(boolean winner){
+		this.winner=winner;
+	}
+	
+	public boolean isWinner(){
+		return winner;
+	}
+	
 }
