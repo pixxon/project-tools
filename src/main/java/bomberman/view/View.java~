@@ -114,23 +114,23 @@ public class View extends Application implements IView{
 				for(int i = 0; i < data.getHeight(); ++i){
 					for(int j = 0; j < data.getWidth(); ++j){
 						labelGrid[i][j] = new Label();
-						if(data.getField(i, j) instanceof Bomb){
+						if(data.getField(i, j).getType() instanceof Bomb){
 							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/bomb.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Flor){
+						if(data.getField(i, j).getType() instanceof Flor){
 							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/floorGrass.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Obst){
+						if(data.getField(i, j).getType() instanceof Obst){
 							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/breakable.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Player){
+						if(data.getField(i, j).getType() instanceof Player){
 							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/bomberangel.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Wall){
+						if(data.getField(i, j).getType() instanceof Wall){
 							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/brickWall.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
