@@ -12,27 +12,48 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Alert;
 
 public class View extends Application implements IView{
 	
-	private List<List<Label>> labelGrid;
+	private Label labelGrid[][];
 	private EventHandler playerID;
 	private EventHandler gameOver;
 	private EventHandler gameAdvanced;
 	private EventHandler gameCreated;
 	private int iD;
+	private Stage primaryStage;
 	
 	public View(){
 		playerID = new EventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
-				iD = (Integer)eventargs;
+				PlayerIDEventArgs tmPlayerID = (PlayerIDEventArgs)eventargs;
+				iD = tmPlayerID.getID();
 			}
 		};
 		
 		gameOver = new EventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
+				GameOverEventArg tmpGameOver = (PlayerIDEventArgs)eventargs;
+				
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Game Over");
+				
+				if(tmpGameOver.isWinner()){
+					
+					alert.setHeaderText("Congratulations! You Won!");
+					
+				}else{
+					
+					alert.setHeaderText("Maybe next time :(");
+					
+				}
+				
+				alert.showAndWait();
+				
+				//TODO: Close application.
 				
 			}
 		};
@@ -41,33 +62,66 @@ public class View extends Application implements IView{
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
 				
+				GameAdvancedEventArg tmpAdvanced = (GameAdvancedEventArg)eventargs;
+				
+				if(tmpAdvanced.getType() instanceof Bomb){
+					labelgrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background("resources/bomb.png"));
+				}
+				if(tmpAdvanced.getType() instanceof Flor){
+					labelgrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background("resources/floorGrass.png"));
+				}
+				if(tmpAdvanced.getType() instanceof Obst){
+					labelgrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background("resources/breakable.png"));
+				}
+				if(tmpAdvanced.getType() instanceof Player){
+					labelgrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background("resources/bomberangel.png"));
+				}
+				if(tmpAdvanced.getType() instanceof Wall){
+					labelgrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background("resources/brickWall.png"));
+				}
+				
+				//TODO: Draw Pictures.
+				
 			}
 		};
 		
 		gameCreated = new EventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
-				List<List<FieldType>> data = (List<List<FieldType>>)eventargs;
+				GameCreatedEventArg data = (GameCreatedEventArg)eventargs;
 				
-				labelGrid = new List<List<Label>>(data.length);
+				labelGrid = new Label(data.getHeight(), data.getWidth());
+				GridPane root = new GridPane();
 				
-				for(int i = 0; i < data.length, i++){
-					labelGrid.at(i) = new List<Label>(data.at(i).length);
-					for(int j = 0; j < data.at(i).length){
-						labelGrid.at(i).at(j) = new Label();
-						switch (data.at(i).at(j)){
-							case Bomb: labelgrid.at(i).at(j).setBackground(new Background());
-							break;
-							case Wall: labelgrid.at(i).at(j).setBackground(new Background());
-							break;
-							case Player: labelgrid.at(i).at(j).setBackground(new Background());
-							break;
-							case Empty: labelgrid.at(i).at(j).setBackground(new Background());
-							break;
-							case Breakable: labelgrid.at(i).at(j).setBackground(new Background());
+				for(int i = 0; i < data.getHeight(), ++j){
+					for(int j = 0; j < data.getWidth(), ++j){
+						labelGrid[i][j] = new Label();
+						if(data.getField(i, j).getType() instanceof Bomb){
+							labelgrid[i][j].setBackground(new Background("resources/bomb.png"));
+							root.add(labelgrid[i][j], i, j);
+						}
+						if(data.getField(i, j).getType() instanceof Flor){
+							labelgrid[i][j].setBackground(new Background("resources/floorGrass.png"));
+							root.add(labelgrid[i][j], i, j);
+						}
+						if(data.getField(i, j).getType() instanceof Obst){
+							labelgrid[i][j].setBackground(new Background("resources/breakable.png"));
+							root.add(labelgrid[i][j], i, j);
+						}
+						if(data.getField(i, j).getType() instanceof Player){
+							labelgrid[i][j].setBackground(new Background("resources/bomberangel.png"));
+							root.add(labelgrid[i][j], i, j);
+						}
+						if(data.getField(i, j).getType() instanceof Wall){
+							labelgrid[i][j].setBackground(new Background("resources/brickWall.png"));
+							root.add(labelgrid[i][j], i, j);
 						}
 					}
 				}
+				
+				Scene scene = new Scene(root, 640, 480);
+				primaryStage.setScene(scene);
+				//TODO: Set BG here too.
 			}
 		};
 	}
@@ -94,18 +148,8 @@ public class View extends Application implements IView{
 	
 	@Override
     public void start(Stage primaryStage) {
-		Label label = new Label("a label");
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        
-        GridPane root = new GridPane();
-        root.add(btn, 1, 1);
-		root.add(label, 2, 1);
-
-		Scene scene = new Scene(root, 640, 480);
-
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
+		
+        primaryStage.setTitle("Bomberman");
         primaryStage.show();
     }
 	
