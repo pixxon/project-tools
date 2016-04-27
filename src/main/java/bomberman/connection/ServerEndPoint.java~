@@ -1,5 +1,6 @@
 package bomberman.connection;
 
+import bomberman.connection.demo.DemoModel;
 import bomberman.connection.util.*;
 import bomberman.connection.util.EncodeException;
 import bomberman.connection.util.FunctionArgs.LeavePlayerArg;

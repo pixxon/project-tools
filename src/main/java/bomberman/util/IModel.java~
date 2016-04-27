@@ -1,6 +1,6 @@
 package bomberman.util;
  
-import bomberman.util.GameEvent;
+import bomberman.util.Event;
 import bomberman.util.Direction;
  
 /**
