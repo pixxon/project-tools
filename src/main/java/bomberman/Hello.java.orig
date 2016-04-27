@@ -1,5 +1,6 @@
 package bomberman;
 
+<<<<<<< HEAD
 import bomberman.persistance.Actor;
 import bomberman.persistance.Table;
 
@@ -14,4 +15,12 @@ public class Hello{
             System.out.println("\n");
         }
     }
+=======
+public class Hello
+{
+	public static void main(String[] args)
+	{
+		System.out.println("Hi!");
+	}
+>>>>>>> refs/remotes/origin/master
 }
