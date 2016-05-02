@@ -16,6 +16,7 @@ public class Player extends Actor{
     public Player(int posX, int posY) {
         super(posX, posY);
         this.player_id = PLAYER_ID;
+        PLAYER_ID++;
         alive = true;
         destroyable = true;
     }
