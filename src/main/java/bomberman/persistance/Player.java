@@ -6,7 +6,7 @@ package bomberman.persistance;
  */
 public class Player extends Actor{
     
-    public static int PLAYER_ID;
+    private static int PLAYER_ID;
     
     private final int player_id;
     private boolean alive;
