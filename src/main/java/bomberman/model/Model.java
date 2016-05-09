@@ -19,16 +19,18 @@ public class Model implements IModel{
 	
 	private final int BOMB_RANGE = 2;
 	
+	
+	/**
+	*Private newsted class, which helps when a bomb is exploding
+	*
+	*
+	*/
 	private class BombTimeOutEventArgs extends GameAdvancedEventArg{
-		private Bomb b;
 		private Player p;
-		public BombTimeOutEventArgs(Player p, Bomb b)
+		public BombTimeOutEventArgs(int x, int y, Player p, Bomb b)
 		{
+			super(x,y,b);
 			this.p=p;
-			this.b=b;
-		}
-		public Bomb getBomb(){
-			return b;
 		}
 		public Player getPlayer(){
 			return p;
@@ -49,47 +51,45 @@ public class Model implements IModel{
 	}
 	//endregion
 
-	//region PUBLIC_EVENT_GETTERS
+	//region PUBLIC_GameEvent_GETTERS
 	
 	@Override
-	public event getGameAdvanced(){
+	public GameEvent getGameAdvanced(){
 		return gameAdvanced;
 	}
 	
 	@Override
-	public Event getGameOver(){
+	public GameEvent getGameOver(){
 		return gameOver;
 	}
 	
 	@Override
-	public Event getGameCreated(){
+	public GameEvent getGameCreated(){
 		return gameCreated;
 	}
 	
 	@Override
-	public Event getPlayerID(){
-		return playerIdEvent;
+	public GameEvent getPlayerID(){
+		return playerIdGameEvent;
 	}
 	
 	//endregion
 	
-	//region PRIVATE_EVENTS
+	//region PRIVATE_GameEvents
 	
+	private GameEvent gameAdvanced;
+	private GameEvent gameOver;
+	private GameEvent gameCreated;
+	private GameEvent playerIdGameEvent;
+	private GameEvent bombTimeOutGameEvent;
 
-	
-	private Event gameAdvanced;
-	private Event gameOver;
-	private Event gameCreated;
-	private Event playerIdEvent;
-	private Event bombTimeOutEvent;
-
-	private EventHandler bombTimeOutHandler = new EventHandler()
+	private GameEventHandler bombTimeOutHandler = new GameEventHandler()
 	{
 		@Override
-		public void actionPerformed(Object sender, Object eventArgs)
+		public void actionPerformed(Object sender, Object GameEventArgs)
 		{
-			if (!(eventArgs instanceof BombTimeOutEventArgs)) throw new IllegalArgumentException();
-			BombTimeOutEventArgs args = (BombTimeOutEventArgs)eventArgs;
+			if (!(GameEventArgs instanceof BombTimeOutEventArgs)) throw new IllegalArgumentException();
+			BombTimeOutEventArgs args = (BombTimeOutEventArgs)GameEventArgs;
 			bombTimeOut(args);
 		}
 	};
@@ -100,40 +100,34 @@ public class Model implements IModel{
 	//region PUBLIC_METHODS
 	/**
 	*Called upon starting the game
-	*Airs the gameCreated event
+	*Airs the gameCreated GameEvent
 	*
 	*/
 	public void newGame() throws NullPointerException{
 		if(gameTable==null){
 			throw new NullPointerException();
 		}
-		gameTable.generateTable();
-		GameCreatedEventArg args = new GameCreatedEventArg()
-			{
-				private Table t;
-				public GameCreatedEventArg init(Table gt){
-					t=gt;
-					return this;
-				}
-				
-				public Actor[][] getFields(){
-					return t.getPlayField();
-				}
-			};
-		gameCreated.notifyListeners(args.init(gameTable));
+		
+		int size = gameTable.GetSize();
+		GameCreatedEventArg args = new GameCreatedEventArg(size,size);
+		for(int i=0;i<size;++i)
+			for(int j=0;j<size;++j){
+				args.setField(i,j,gameTable.getField(i,j));
+			}
+		gameCreated.notifyListeners(args);
 	}
 
 	
 	/**
 	 * Adds a new player to the game
-	 *
+	 * Notifies the view about the change
 	 */
 	public void newPlayer(){
-		Player newPlayer = gameTable.addPlayer();
-		players.push(newPlayer);
+		Player newPlayer = gameTable.AddPlayer();
+		players.add(newPlayer);
 		hasPlayerPlacedBomb.put(newPlayer,false);
-		
-		playerIdEvent.notifyListeners(new PlayerIDEventArg(newPlayer.getPlayer_id()));
+		playerIdGameEvent.notifyListeners(new PlayerIDEventArg(newPlayer.getPlayer_id()));
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer));
 	}
 	
 	
@@ -159,12 +153,12 @@ public class Model implements IModel{
 			case LEFT : newX = -1; newY = 0; break;
 		}
 		if(isFieldEmpty(newX, newY)){
-			Actor a = FieldToActor(p.getX(), p.getY(), Field.EMPTY);
-			gameTable.setField(p.getX(), p.getY(), a);
-			notifyFieldChanged(p.getX(), p.getY(), a);
-			p.setX(p.getX()+newX);
-			p.setY(p.getY()+newY);
-			notifyFieldChanged(p.getX(), p.getY(), p);
+			Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
+			gameTable.setField(p.getPosX(), p.getPosY(), a);
+			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+			p.setPosX(p.getPosX()+newX);
+			p.setPosY(p.getPosY()+newY);
+			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), p));
 		}
 	}
 	
@@ -181,18 +175,18 @@ public class Model implements IModel{
 		if(hasPlayerPlacedBomb.get(p) || !p.isAlive()){
 			return;
 		}		
-		Bomb b = new Bomb(p.getX(), p.getY());
-		Actor a = FieldToActor(p.getX(), p.getY(), Field.BOMB);
-		gameTable.setField(p.getX(), p.getY(), a);
-		notifyFieldChanged(p.getX(), p.getY(), a);
-		hasPlayerPlacedBomb.set(p,true);
+		Bomb b = new Bomb(p.getPosX(), p.getPosY());
+		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.BOMB);
+		gameTable.setField(p.getPosX(), p.getPosY(), a);
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+		hasPlayerPlacedBomb.put(p,true);
 		placedBombs.add(b);
 		
 		Timer t = new Timer();
 		t.schedule(new TimerTask(){
 			@Override
 			public void run(){
-				bombTimeOutEvent.notifyListeners(new BombTimeOutEventArgs(p,b));
+				bombTimeOutGameEvent.notifyListeners(new BombTimeOutEventArgs(p.getPosX(), p.getPosY(),p,b));
 			}
 		}, 2000);
 	}
@@ -206,6 +200,10 @@ public class Model implements IModel{
 		Player p = getPlayerById(id);
 		players.remove(p);
 		hasPlayerPlacedBomb.remove(p);
+		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
+		gameTable.setField(p.getPosX(), p.getPosY(), a);
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+			
 	}
 	
 	//endregion
@@ -221,12 +219,12 @@ public class Model implements IModel{
 		placedBombs = new HashSet<Bomb>();
 		players = new ArrayList<Player>();
 		hasPlayerPlacedBomb = new HashMap<Player, Boolean>();
-		bombTimeOutEvent = new Event();
-		gameAdvanced = new Event();
-		gameOver = new Event();
-		gameCreated = new Event();
-		playerIdEvent = new Event();
-		bombTimeOutEvent.addListener(bombTimeOutHandler);
+		bombTimeOutGameEvent = new GameEvent();
+		gameAdvanced = new GameEvent();
+		gameOver = new GameEvent();
+		gameCreated = new GameEvent();
+		playerIdGameEvent = new GameEvent();
+		bombTimeOutGameEvent.addListener(bombTimeOutHandler);
 	}
 	
 	
@@ -244,40 +242,10 @@ public class Model implements IModel{
 			case WALL: return new Wall(x,y); break;
 			case OBSTACLE: return new Obst(x,y); break;
 			case BOMB: return new Bomb(x,y); break;
-			default: throw new InvalidParameterException();
+			default: throw new IllegalArgumentException();
 		}
 	}
 	
-	/**
-	*Airs the event of the changed field
-	*@param x the X coordinate of the field
-	*@param y the Y coordinate of the field
-	*@param f the type of the Field
-	*
-	*/
-	private void notifyFieldChanged(int x, int y, Actor a)
-	{
-		GameAdvancedEventArg args = new GameAdvancedEventArg()
-		{
-			private int x,y;
-			private Actor f;
-			public int getX(){
-				return x;
-			}
-			public int getY(){
-				return y;
-			}
-			public Field getActor(){
-				return a;
-			}
-			public GameAdvancedEventArg init(int i, int j, Actor ac){
-				x=i;y=j;a=ac;
-				return this;
-			}
-		};
-		gameAdvanced.notifyListeners(args.init(x,y,a));
-	}
-
 	/**
 	*Called in own methods to get the Player object by its ID
 	*@param id player identifier
@@ -298,30 +266,30 @@ public class Model implements IModel{
 	private boolean isFieldEmpty(int x, int y){
 		if(!inRange(x, y)) return false;
 		for(Player p : players){
-			if(p.getX()==x && p.getY()==y) return false;
+			if(p.getPosX()==x && p.getPosY()==y) return false;
 		}
 		return (gameTable.getField(x, y) instanceof Flor);
 	}
 
 	
 	/**
-	*Helper method, called by the eventhandler of the explosion
+	*Helper method, called by the GameEventhandler of the explosion
 	*@param b Bomb exploding
 	*
 	*/
 	private void bombTimeOut(BombTimeOutEventArgs args){
-		Bomb b = args.getBomb();
+		Bomb b = (Bomb)args.getType();
 		Player pp = args.getPlayer();
-		int x = b.getX();
-		int y = b.getY();
+		int x = args.getX();
+		int y = args.getY();
 		
-		hasPlayerPlacedBomb.set(pp,false);
+		hasPlayerPlacedBomb.put(pp,false);
 		placedBombs.remove(b);
 		
 		bombExplode(x,y);
 		Actor a = FieldToActor(x,y, Field.EMPTY);
 		gameTable.setField(x,y,a);
-		notifyFieldChanged(x,y,a);
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a));
 		
 		for(int i = 1;i<= BOMB_RANGE; ++i){
 			bombExplode(x-i,y);
@@ -331,30 +299,17 @@ public class Model implements IModel{
 		}
 		
 		int alive=0;
-		LinkedList<Player> players_alive = new LinkedList<Player>();
 		for(Player p : players){
 			if(p.isAlive()){
 				++alive;
-				players_alive.add(p);
 			}
 		}
 		if(alive==1){
-			GameOverEventArg goea = new GameOverEventArg()
-			{
-				private int winner_id;
-				public int getWinnerId(){
-					return winner_id;
-				}
-				public GameOverEventArg init(int id){
-					winner_id = id;
-					return this;
-				}
-			};
-			gameOver.notifyListeners(goea.init(players_alive.get(0).getPlayer_id()));
+			//gameOver.notifyListeners(new GameOverEventArg(p.getPlayer_id()));
 		}
 	}
 	/**
-	*Called upon bomb explosion event
+	*Called upon bomb explosion GameEvent
 	*Executes the explosions horizontally and vertically from the params
 	
 	*@param x the X coordinate of the field
@@ -364,14 +319,14 @@ public class Model implements IModel{
 	private void bombExplode(int x, int y){
 		if(inRange(x,y)){
 			for(Player p : players){
-				if(p.getX()==x && p.getY()==y){
+				if(p.getPosX()==x && p.getPosY()==y){
 					p.setAlive(false);
 				}
 			}
 			if(gameTable.getField(x,y).isDestroyable()){
 				Actor a = FieldToActor(x,y, Field.EMPTY);
 				gameTable.setField(x,y,a);
-				notifyFieldChanged(x,y,a);
+				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a));
 			}
 		}
 	}
@@ -383,7 +338,7 @@ public class Model implements IModel{
 	*@returns the boolean value of the given field being within the table's range
 	*/
 	private boolean inRange(int x, int y){
-		return (x>=0 && y>=0 && x<gameTable.getWidth() && y<gameTable.getHeight());
+		return (x>=0 && y>=0 && x<gameTable.GetSize() && y<gameTable.GetSize());
 	}
 	//endregion
 	
