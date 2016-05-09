@@ -24,6 +24,9 @@ public class Table {
 
     }
 
+    public int GetSize(){
+        return this.size;
+    }
     
     public Table(int size) {
         if(size < 9)
