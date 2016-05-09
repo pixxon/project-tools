@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>370</x>
+      <y>190</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>util
+--
++ Event
++ EventHandler
++ /BaseModel/
++ /BaseView/
++ Direction
+
+halign=left
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>350</x>
+      <y>100</y>
+      <w>440</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>bomberman
+--
++ Bomberman
++ Client
++ Server
+
+halign=left
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>510</x>
+      <y>190</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>connection
+--
++ ServerEndPoint
++ ClientEndPoint
+
+halign=left
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>370</x>
+      <y>350</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>model
+--
++ Model
+
+valign=top
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>510</x>
+      <y>350</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>view
+--
++ View
+
+valign=top
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>650</x>
+      <y>190</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>persistence
+--
++ Player
++ Bomb
++ Table
++ /Field/
++ Wall
++ Empty
++ Obstacle
+
+valign=top
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
