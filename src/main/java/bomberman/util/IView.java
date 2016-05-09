@@ -1,6 +1,6 @@
 package bomberman.util;
  
-import bomberman.util.EventHandler;
+import bomberman.util.GameEventHandler;
 import bomberman.util.IModel;
  
 /**
@@ -13,7 +13,7 @@ public interface IView
 	 *
 	 * @returns The event handler of playerID.
 	 */
-	public EventHandler getPlayerIDHandler();
+	public GameEventHandler getPlayerIDHandler();
 
 	
 	/**
@@ -21,17 +21,17 @@ public interface IView
 	 *
 	 * @returns Handler for models GameOver event.
 	 */
-	public EventHandler getGameOverHandler();
+	public GameEventHandler getGameOverHandler();
 	
 	/**
 	 * @returns Handler for models GameAdvanced event.
 	 */
-	public EventHandler getGameAdvancedHandler();
+	public GameEventHandler getGameAdvancedHandler();
 	
 	/**
 	 * Getter for GameCreatedHandler.
 	 *
 	 * @returns Handler for models GameCreated event.
 	 */
-	public EventHandler getGameCreatedHandler();
+	public GameEventHandler getGameCreatedHandler();
 }

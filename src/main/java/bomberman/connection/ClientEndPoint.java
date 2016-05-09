@@ -8,7 +8,7 @@ import bomberman.connection.util.FunctionArgs.MovePlayerArg;
 import bomberman.connection.util.FunctionArgs.PlaceBombArg;
 import bomberman.connection.util.MessageWrapper;
 import bomberman.util.Direction;
-import bomberman.util.Event;
+import bomberman.util.GameEvent;
 import bomberman.util.IModel;
 import com.google.gson.Gson;
 
@@ -31,23 +31,23 @@ public class ClientEndPoint implements IModel{
     private static CountDownLatch latch;
 
 
-    private Event GameAdvanced;
-    private Event GameCreated;
-    private Event PlayerId;
-    private Event GameOver;
+    private GameEvent GameAdvanced;
+    private GameEvent GameCreated;
+    private GameEvent PlayerId;
+    private GameEvent GameOver;
 
 /********************************** Constructor *********************************************************/
 
 
     /**
      * Contructor
-     * Initializes the events
+     * Initializes the GameEvents
      */
     public ClientEndPoint() {
-        GameOver = new Event();
-        GameAdvanced = new Event();
-        GameCreated = new Event();
-        PlayerId = new Event();
+        GameOver = new GameEvent();
+        GameAdvanced = new GameEvent();
+        GameCreated = new GameEvent();
+        PlayerId = new GameEvent();
         latch = new CountDownLatch(1);
     }
 
@@ -67,7 +67,7 @@ public class ClientEndPoint implements IModel{
     /**
      * Listens for the new messages
      * Decodes the new messaeges
-     * Raises the suitable event with the argument
+     * Raises the suitable GameEvent with the argument
      * @param message The received message
      * @param session The sender session/should be the server
      */
@@ -106,22 +106,22 @@ public class ClientEndPoint implements IModel{
 /********************************** Helper function ********************************************************/
 
     /**
-     * Converts the event argument to Json string
-     * @param eventargs The events argument
+     * Converts the GameEvent argument to Json string
+     * @param GameEventargs The GameEvents argument
      * @return The converted string, which will be send to the clients
      */
-    private String objectToJsonString(Object eventargs)throws EncodeException{
+    private String objectToJsonString(Object Eventargs)throws EncodeException{
         String message = null;
         Gson gson = new Gson();
         String objectString = null;
 
         try{
-            objectString = gson.toJson(eventargs);
-            MessageWrapper messageWrapper = new MessageWrapper(eventargs.getClass().getCanonicalName(),objectString);
+            objectString = gson.toJson(Eventargs);
+            MessageWrapper messageWrapper = new MessageWrapper(Eventargs.getClass().getCanonicalName(),objectString);
             message = gson.toJson(messageWrapper);
         }catch (Exception e)
         {
-            throw new EncodeException("Didn't manage to encode class  " + eventargs.getClass().getName());
+            throw new EncodeException("Didn't manage to encode class  " + Eventargs.getClass().getName());
         }
 
 
@@ -194,42 +194,42 @@ public class ClientEndPoint implements IModel{
     }
 
     /**
-     * Getter for PlayerIDEventArg event
+     * Getter for PlayerID GameEvent
      *
-     * @returns the event which stores the playerID
+     * @returns the GameEvent which stores the playerID
      */
     @Override
-    public Event getPlayerID() {
+    public GameEvent getPlayerID() {
         return PlayerId;
     }
 
     /**
-     * Getter for GameCreated event
+     * Getter for GameCreated GameEvent
      *
-     * @returns The event which gets invoked when game ends
+     * @returns The GameEvent which gets invoked when game ends
      */
     @Override
-    public Event getGameCreated() {
+    public GameEvent getGameCreated() {
         return GameCreated;
     }
 
     /**
-     * Getter for GameAdvanced event*
+     * Getter for GameAdvanced GameEvent
      *
-     * @returns The event which gets invoked when game ends
+     * @returns The GameEvent which gets invoked when game ends
      */
     @Override
-    public Event getGameAdvanced() {
+    public GameEvent getGameAdvanced() {
         return GameAdvanced;
     }
 
     /**
-     * Getter for GameOver event
+     * Getter for GameOver GameEvent
      *
-     * @returns The event which gets invoked when game ends
+     * @returns The GameEvent which gets invoked when game ends
      */
     @Override
-    public Event getGameOver() {
+    public GameEvent getGameOver() {
         return GameOver;
     }
 

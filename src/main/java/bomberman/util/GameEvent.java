@@ -3,26 +3,26 @@ package bomberman.util;
 import java.util.List;
 import java.util.LinkedList;
 
-import bomberman.util.EventHandler;
+import bomberman.util.GameEventHandler;
 
 /**
  * A simple class to help handling any kind of event.
  */
-public class Event
+public class GameEvent
 {
 	/**
 	 * List of all connected handlers
 	 *
 	 */
-	private List<EventHandler> listeners;
+	private List<GameEventHandler> listeners;
 	
 	/**
 	 * Constructor for Event.
 	 *
 	 */
-	public Event()
+	public GameEvent()
 	{
-		listeners = new LinkedList<EventHandler>();
+		listeners = new LinkedList<GameEventHandler>();
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public class Event
 	 *
 	 * @param listener the new handler
 	 */
-	public void addListener(EventHandler listener)
+	public void addListener(GameEventHandler listener)
 	{
 		listeners.add(listener);
 	}
@@ -40,7 +40,7 @@ public class Event
 	 *
 	 * @param listener the handler to be removed.
 	 */
-	public void removeListener(EventHandler listener)
+	public void removeListener(GameEventHandler listener)
 	{
 		listeners.remove(listener);
 	}
@@ -52,7 +52,7 @@ public class Event
 	 */
 	public void notifyListeners(Object eventargs)
 	{
-		for(EventHandler listener : listeners)
+		for(GameEventHandler listener : listeners)
 		{
 			listener.actionPerformed(this, eventargs);
 		}
