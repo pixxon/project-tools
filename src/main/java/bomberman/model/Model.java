@@ -242,9 +242,8 @@ public class Model implements IModel{
 			case WALL: return new Wall(x,y);
 			case OBSTACLE: return new Obst(x,y);
 			case BOMB: return new Bomb(x,y);
-			default: throw new IllegalArgumentException();
+			default: return null;
 		}
-		return null;
 	}
 	
 	/**
