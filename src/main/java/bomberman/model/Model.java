@@ -168,14 +168,14 @@ public class Model implements IModel{
 	*@param id the unique identifier of the player
 	*/
 	public void placeBomb(int id){
-		Player p = getPlayerById(id);
+		final Player p = getPlayerById(id);
 		if (p==null){
 			throw new NoSuchElementException("Invalid player ID!");
 		}
 		if(hasPlayerPlacedBomb.get(p) || !p.isAlive()){
 			return;
 		}		
-		Bomb b = new Bomb(p.getPosX(), p.getPosY());
+		final Bomb b = new Bomb(p.getPosX(), p.getPosY());
 		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.BOMB);
 		gameTable.setField(p.getPosX(), p.getPosY(), a);
 		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
@@ -238,12 +238,13 @@ public class Model implements IModel{
 	*/
 	private Actor FieldToActor(int x, int y, Field f){
 		switch(f){
-			case EMPTY: return new Flor(x,y); break;
-			case WALL: return new Wall(x,y); break;
-			case OBSTACLE: return new Obst(x,y); break;
-			case BOMB: return new Bomb(x,y); break;
+			case EMPTY: return new Flor(x,y);
+			case WALL: return new Wall(x,y);
+			case OBSTACLE: return new Obst(x,y);
+			case BOMB: return new Bomb(x,y);
 			default: throw new IllegalArgumentException();
 		}
+		return null;
 	}
 	
 	/**
