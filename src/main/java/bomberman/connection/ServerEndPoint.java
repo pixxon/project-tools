@@ -8,6 +8,7 @@ import bomberman.connection.util.FunctionArgs.PlaceBombArg;
 import bomberman.util.GameEventHandler;
 import bomberman.util.IModel;
 import bomberman.util.IView;
+import bomberman.model.Model;
 import com.google.gson.Gson;
 
 import javax.websocket.*;
@@ -43,8 +44,8 @@ public class ServerEndPoint implements IView  {
      * Constructor
      * Defines the eventHanglers, and connect them to the model
      */
-    public ServerEndPoint(IModel _model) {
-        model = _model;
+    public ServerEndPoint() {
+        model = new Model();
         stack = new Stack<>();
 
         /**
