@@ -166,8 +166,6 @@ public class View extends Application implements IView{
 		} catch (DeploymentException | URISyntaxException  e) {
 		    throw new RuntimeException(e);
 		}
-
-		model.newPlayer();
 	}
 	
 	@Override
