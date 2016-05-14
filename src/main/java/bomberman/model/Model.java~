@@ -114,7 +114,6 @@ public class Model implements IModel{
 			for(int j=0;j<size;++j){
 				args.setField(i,j,gameTable.getField(i,j));
 			}
-		System.out.println("asd");
 		gameCreated.notifyListeners(args);
 	}
 

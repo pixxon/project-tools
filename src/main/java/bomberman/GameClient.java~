@@ -1,8 +1,12 @@
 package bomberman;
 
 import bomberman.view.View;
+import org.glassfish.tyrus.client.ClientManager;
 
 
+import javax.websocket.DeploymentException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
 import javafx.application.Application;
