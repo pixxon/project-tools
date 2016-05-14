@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -47,7 +48,7 @@ public class View extends Application implements IView{
 
 	private IModel model;
 	private int iD;
-	private Stage primaryStage;
+	private Scene scene;
 	
 	public View(){
 		playerID = new GameEventHandler(){
@@ -89,20 +90,20 @@ public class View extends Application implements IView{
 				
 				GameAdvancedEventArg tmpAdvanced = (GameAdvancedEventArg)eventargs;
 				
-				if(tmpAdvanced.getType() instanceof Bomb){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("resources/bomb.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				if("Bomb".equals(tmpAdvanced.getType())){
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("bomb.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
-				if(tmpAdvanced.getType() instanceof Flor){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("resources/floorGrass.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				if("Flor".equals(tmpAdvanced.getType())){
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("floorGrass.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
-				if(tmpAdvanced.getType() instanceof Obst){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("resources/breakable.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				if("Obst".equals(tmpAdvanced.getType())){
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("breakable.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
-				if(tmpAdvanced.getType() instanceof Player){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("resources/bomberangel.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				if("Player".equals(tmpAdvanced.getType())){
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("bomberangel.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
-				if(tmpAdvanced.getType() instanceof Wall){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("resources/brickWall.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				if("Wall".equals(tmpAdvanced.getType().split(" ")[0])){
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("brickWall.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				
 				//TODO: Draw Pictures.
@@ -113,7 +114,7 @@ public class View extends Application implements IView{
 		gameCreated = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
-				System.out.println("asd");
+
 				GameCreatedEventArg data = (GameCreatedEventArg)eventargs;
 				
 				labelGrid = new Label[data.getHeight()][data.getWidth()];
@@ -122,31 +123,35 @@ public class View extends Application implements IView{
 				for(int i = 0; i < data.getHeight(); ++i){
 					for(int j = 0; j < data.getWidth(); ++j){
 						labelGrid[i][j] = new Label();
-						if(data.getField(i, j) instanceof Bomb){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/bomb.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+						labelGrid[i][j].setMinWidth(50);
+						labelGrid[i][j].setMaxWidth(50);
+						labelGrid[i][j].setMinHeight(50);
+						labelGrid[i][j].setMaxHeight(50);
+
+						if("Bomb".equals(data.getField(i, j))){
+							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomb.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Flor){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/floorGrass.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+						if("Flor".equals(data.getField(i, j))){
+							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("floorGrass.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Obst){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/breakable.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+						if("Obst".equals(data.getField(i, j))){
+							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("breakble.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Player){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/bomberangel.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+						if("Player".equals(data.getField(i, j).split(" ")[0])){
+							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomberangel.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
-						if(data.getField(i, j) instanceof Wall){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image("resources/brickWall.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+						if("Wall".equals(data.getField(i, j))){
+							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("brickWall.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 							root.add(labelGrid[i][j], i, j);
 						}
 					}
 				}
-				
-				Scene scene = new Scene(root, 640, 480);
-				primaryStage.setScene(scene);
+
+				scene.setRoot(root);
 				//TODO: Set BG here too.
 			}
 		};
@@ -166,6 +171,8 @@ public class View extends Application implements IView{
 		} catch (DeploymentException | URISyntaxException  e) {
 		    throw new RuntimeException(e);
 		}
+
+		model.newPlayer();
 	}
 	
 	@Override
@@ -190,8 +197,10 @@ public class View extends Application implements IView{
 	
 	@Override
     public void start(Stage primaryStage) {
-	this.primaryStage = primaryStage;
+	this.scene = new Scene(new GridPane(), 640, 480);
+
         primaryStage.setTitle("Bomberman");
+	primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

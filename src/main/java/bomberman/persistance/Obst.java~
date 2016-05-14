@@ -12,7 +12,7 @@ public class Obst extends Actor{
     }
     
     @Override
-    public String toString(){
+    String toString(){
 	return "Obst";
     }
 }

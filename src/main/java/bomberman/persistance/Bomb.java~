@@ -22,7 +22,7 @@ public class Bomb extends Actor{
     }
     
     @Override
-    public String toString(){
+    String toString(){
 	return "Bomb";
     }
 }

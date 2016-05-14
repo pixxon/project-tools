@@ -13,7 +13,7 @@ import bomberman.persistance.Actor;
  */
 public class GameCreatedEventArg {
 	
-    private String[][] mtx;
+    private Actor[][] mtx;
 	private int height;
 	private int width;
 	
@@ -21,7 +21,7 @@ public class GameCreatedEventArg {
 		this.height = height;
 		this.width = width;
 		
-		mtx = new String[height][width];
+		mtx = new Actor[height][width];
 	}
 	
 	public int getHeight(){
@@ -32,11 +32,11 @@ public class GameCreatedEventArg {
 		return width;
 	}
 	
-	public void setField(int x, int y, String type){
+	public void setField(int x, int y, Actor type){
 		mtx[x][y] = type;
 	}
 	
-	public String getField(int x, int y){
+	public Actor getField(int x, int y){
 		return mtx[x][y];
 	}
 }
