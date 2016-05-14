@@ -55,7 +55,7 @@ public class Player extends Actor{
     }
 
     @Override
-    public String toString(){
+    String toString(){
 	return "Player " + player_id;
     }
 }

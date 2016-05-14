@@ -25,15 +25,33 @@ public class Model implements IModel{
 	*
 	*
 	*/
-	private class BombTimeOutEventArgs extends GameAdvancedEventArg{
+	private class BombTimeOutEventArgs{
 		private Player p;
+    		private int x;
+		private int y;
+		private Actor type;
+
 		public BombTimeOutEventArgs(int x, int y, Player p, Bomb b)
 		{
-			super(x,y,b);
+			this.x = x;
+			this.y = y;
+			this.type = type;
 			this.p=p;
 		}
 		public Player getPlayer(){
 			return p;
+		}
+	
+		public int getX(){
+			return x;
+		}
+	
+		public int getY(){
+			return y;
+		}
+	
+		public Actor getType(){
+			return type;
 		}
 	};
 	
@@ -41,11 +59,13 @@ public class Model implements IModel{
 	
 	//region CONSTRUCTORS
 	public Model(){
+System.out.println("asd1");
 		gameTable = new Table();
 		Initialize();
 	}
 	
 	public Model(Table t){
+System.out.println("asd2");
 		gameTable = t;
 		Initialize();
 	}
@@ -112,7 +132,7 @@ public class Model implements IModel{
 		GameCreatedEventArg args = new GameCreatedEventArg(size,size);
 		for(int i=0;i<size;++i)
 			for(int j=0;j<size;++j){
-				args.setField(i,j,gameTable.getField(i,j));
+				args.setField(i,j,gameTable.getField(i,j).toString());
 			}
 		System.out.println("asd");
 		gameCreated.notifyListeners(args);
@@ -128,8 +148,9 @@ public class Model implements IModel{
 		players.add(newPlayer);
 		hasPlayerPlacedBomb.put(newPlayer,false);
 		playerIdGameEvent.notifyListeners(new PlayerIDEventArg(newPlayer.getPlayer_id()));
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer));
-		if(players.size()==1){
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer.toString()));
+System.out.println(newPlayer.toString());
+		if(players.size()==2){
 			newGame();
 		}
 	}
@@ -159,10 +180,10 @@ public class Model implements IModel{
 		if(isFieldEmpty(newX, newY)){
 			Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
 			gameTable.setField(p.getPosX(), p.getPosY(), a);
-			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
 			p.setPosX(p.getPosX()+newX);
 			p.setPosY(p.getPosY()+newY);
-			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), p));
+			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), p.toString()));
 		}
 	}
 	
@@ -182,7 +203,7 @@ public class Model implements IModel{
 		final Bomb b = new Bomb(p.getPosX(), p.getPosY());
 		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.BOMB);
 		gameTable.setField(p.getPosX(), p.getPosY(), a);
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
 		hasPlayerPlacedBomb.put(p,true);
 		placedBombs.add(b);
 		
@@ -206,7 +227,7 @@ public class Model implements IModel{
 		hasPlayerPlacedBomb.remove(p);
 		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
 		gameTable.setField(p.getPosX(), p.getPosY(), a);
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a));
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
 			
 	}
 	
@@ -293,7 +314,7 @@ public class Model implements IModel{
 		bombExplode(x,y);
 		Actor a = FieldToActor(x,y, Field.EMPTY);
 		gameTable.setField(x,y,a);
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a));
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a.toString()));
 		
 		for(int i = 1;i<= BOMB_RANGE; ++i){
 			bombExplode(x-i,y);
@@ -330,7 +351,7 @@ public class Model implements IModel{
 			if(gameTable.getField(x,y).isDestroyable()){
 				Actor a = FieldToActor(x,y, Field.EMPTY);
 				gameTable.setField(x,y,a);
-				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a));
+				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a.toString()));
 			}
 		}
 	}

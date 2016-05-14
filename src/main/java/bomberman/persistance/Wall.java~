@@ -12,7 +12,7 @@ public class Wall extends Actor{
     }
     
     @Override
-    public String toString(){
+    String toString(){
 	return "Wall";
     }
 }
