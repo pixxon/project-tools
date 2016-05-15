@@ -37,5 +37,8 @@ public abstract class  Actor {
         return destroyable;
     }
 
-    
+    @Override
+    public String toString(){
+	return "Actor";
+    }
 }

@@ -1,6 +1,6 @@
 package bomberman.util;
  
-import bomberman.util.EventHandler;
+import bomberman.util.GameEventHandler;
 import bomberman.util.IModel;
  
 /**

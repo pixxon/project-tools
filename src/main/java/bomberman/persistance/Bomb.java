@@ -21,5 +21,8 @@ public class Bomb extends Actor{
         return local_bomb_id;
     }
     
-    
+    @Override
+    public String toString(){
+	return "Bomb";
+    }
 }

@@ -1,5 +1,7 @@
 package bomberman.util.EventArgs;
 
+import bomberman.persistance.Actor;
+
 
 /**
  * Created by Attila on 2016. 03. 14..
@@ -11,7 +13,7 @@ package bomberman.util.EventArgs;
  */
 public class GameCreatedEventArg {
 	
-    private Actor[][] mtx;
+    private String[][] mtx;
 	private int height;
 	private int width;
 	
@@ -19,7 +21,7 @@ public class GameCreatedEventArg {
 		this.height = height;
 		this.width = width;
 		
-		mtx = new Actor[height][width];
+		mtx = new String[height][width];
 	}
 	
 	public int getHeight(){
@@ -30,11 +32,11 @@ public class GameCreatedEventArg {
 		return width;
 	}
 	
-	public void setField(int x, int y, Actor type){
+	public void setField(int x, int y, String type){
 		mtx[x][y] = type;
 	}
 	
-	public Actor getField(int x, int y){
+	public String getField(int x, int y){
 		return mtx[x][y];
 	}
 }

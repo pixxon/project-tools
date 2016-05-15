@@ -11,4 +11,8 @@ public class Obst extends Actor{
         destroyable = true;
     }
     
+    @Override
+    public String toString(){
+	return "Obst";
+    }
 }

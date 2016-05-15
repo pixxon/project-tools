@@ -20,7 +20,7 @@ public class GameEvent
 	 * Constructor for Event.
 	 *
 	 */
-	public Event()
+	public GameEvent()
 	{
 		listeners = new LinkedList<GameEventHandler>();
 	}

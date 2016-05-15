@@ -6,7 +6,7 @@ package bomberman.persistance;
  */
 public class Player extends Actor{
     
-    public static int PLAYER_ID;
+    private static int PLAYER_ID = 0;
     
     private final int player_id;
     private boolean alive;
@@ -16,6 +16,7 @@ public class Player extends Actor{
     public Player(int posX, int posY) {
         super(posX, posY);
         this.player_id = PLAYER_ID;
+        PLAYER_ID++;
         alive = true;
         destroyable = true;
     }
@@ -51,5 +52,10 @@ public class Player extends Actor{
 
     public Bomb getBomb() {
         return bomb;
+    }
+
+    @Override
+    public String toString(){
+	return "Player " + player_id;
     }
 }

@@ -11,4 +11,8 @@ public class Wall extends Actor{
         destroyable = false; 
     }
     
+    @Override
+    public String toString(){
+	return "Wall";
+    }
 }
