@@ -1,5 +1,7 @@
 package bomberman.util.EventArgs;
 
+import bomberman.persistance.Actor;
+
 /**
  * Created by Attila on 2016. 03. 14..
  */
@@ -13,9 +15,9 @@ public class GameAdvancedEventArg {
 	
     private int x;
 	private int y;
-	private Actor type;
+	private String type;
 	
-	public GameAdvancedEventArg(int x, int y, Actor type){
+	public GameAdvancedEventArg(int x, int y, String type){
 		this.x = x;
 		this.y = y;
 		this.type = type;		
@@ -29,7 +31,7 @@ public class GameAdvancedEventArg {
 		return y;
 	}
 	
-	public Actor getType(){
+	public String getType(){
 		return type;
 	}
 	

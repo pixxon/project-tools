@@ -24,6 +24,9 @@ public class Table {
 
     }
 
+    public int GetSize(){
+        return this.size;
+    }
     
     public Table(int size) {
         if(size < 9)
@@ -158,30 +161,33 @@ public class Table {
         playField[x][y] = actor;
     }
     
-    public void AddPlayer(){
+    public Player AddPlayer(){
+        Player p = null;
         switch(players.size())
         {
             case 0 : { 
-                Player p = new Player(1,1);
+                p = new Player(1,1);
                 playField[1][1] = p;
                 break;
             }
             case 1 : { 
-                Player p = new Player(size-2,size-2);
+                p = new Player(size-2,size-2);
                 playField[size-2][size-2] = p;
                 break;
             }
             case 2 : { 
-                Player p = new Player(1,size-2);
+                p = new Player(1,size-2);
                 playField[1][size-2] = p;
                 break;
             }
             case 3 : {  
-                Player p = new Player(size-2,1);
+                p = new Player(size-2,1);
                 playField[size-2][1] = p;
                 break;
             }
         }
+players.add(p);
+        return p;
     }
     
     public void PlaceBomb(int id){

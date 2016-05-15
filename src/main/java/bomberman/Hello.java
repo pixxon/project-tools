@@ -1,17 +1,28 @@
 package bomberman;
 
-import bomberman.persistance.Actor;
-import bomberman.persistance.Table;
+import bomberman.GameServer;
+import bomberman.GameClient;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 public class Hello{
-    public static void main(String[] args) {
-        Table f = new Table(5);
-        Actor[][] a = f.getPlayField();
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a.length; j++) {
-                System.out.print("[" + a[i][j].getClass().getSimpleName() + "]");
-            }
-            System.out.println("\n");
-        }
+    public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Server or client?");
+		String mode = br.readLine();
+
+	if ("server".equals(mode)){
+		GameServer server = new GameServer();
+		server.runServer(3000);
+		System.in.read();
+		server.stopServer();
+	}
+
+	if ("client".equals(mode)){
+		GameClient client = new GameClient();
+		client.runClient("ws://localhost:3000/bomberman/game");
+	}
     }
 }

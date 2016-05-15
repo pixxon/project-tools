@@ -1,14 +1,14 @@
 package bomberman.connection;
 
-import bomberman.connection.demo.DemoModel;
 import bomberman.connection.util.*;
 import bomberman.connection.util.EncodeException;
 import bomberman.connection.util.FunctionArgs.LeavePlayerArg;
 import bomberman.connection.util.FunctionArgs.MovePlayerArg;
 import bomberman.connection.util.FunctionArgs.PlaceBombArg;
-import bomberman.util.EventHandler;
+import bomberman.util.GameEventHandler;
 import bomberman.util.IModel;
 import bomberman.util.IView;
+import bomberman.model.Model;
 import com.google.gson.Gson;
 
 import javax.websocket.*;
@@ -26,16 +26,16 @@ import java.util.Stack;
 @ServerEndpoint(value = "/game")
 public class ServerEndPoint implements IView  {
 
-    private SessionHandler sessionHandler = new SessionHandler();
+    private static SessionHandler sessionHandler;
 
-    private IModel model;
+    private static IModel model;
 
-    private EventHandler playerID;
-    private EventHandler gameOver;
-    private EventHandler gameAdvanced;
-    private EventHandler gameCreated;
+    private GameEventHandler playerID;
+    private GameEventHandler gameOver;
+    private GameEventHandler gameAdvanced;
+    private GameEventHandler gameCreated;
 
-    private Stack<Session> stack;
+    private static Stack<Session> stack;
 
 /********************************** Constructor *********************************************************/
 
@@ -44,14 +44,24 @@ public class ServerEndPoint implements IView  {
      * Constructor
      * Defines the eventHanglers, and connect them to the model
      */
-    public ServerEndPoint( ) {
-        model = new DemoModel();
-        stack = new Stack<>();
+    public ServerEndPoint() {
+        if(sessionHandler == null)
+	{
+		sessionHandler = new SessionHandler();
+	}
+        if(model == null)
+	{
+		model = new Model();
+	}
+        if(stack == null)
+	{
+        	stack = new Stack<>();
+	}
 
         /**
          * Handler for models GameOver event.
          */
-        gameOver = new EventHandler(){
+        gameOver = new GameEventHandler(){
             /**
              * Converts the eventargs into string and sends to the sessions
              * @param sender the object, who created the event.
@@ -70,7 +80,7 @@ public class ServerEndPoint implements IView  {
         /**
          * Handler for models GameAdvanced event.
          */
-        gameAdvanced = new EventHandler(){
+        gameAdvanced = new GameEventHandler(){
             /**
              * Converts the eventargs into string and sends to the sessions
              * @param sender the object, who created the event.
@@ -89,7 +99,7 @@ public class ServerEndPoint implements IView  {
         /**
          * Handler for models GameCreated event.
          */
-        gameCreated = new EventHandler(){
+        gameCreated = new GameEventHandler(){
             /**
              * Converts the eventargs into string and sends to the sessions
              * @param sender the object, who created the event.
@@ -108,11 +118,11 @@ public class ServerEndPoint implements IView  {
         /**
          * Handler for models PlayerID event.
          */
-        playerID = new EventHandler(){
+        playerID = new GameEventHandler(){
             @Override
             public void actionPerformed(Object sender, Object eventargs) {
                 try {
-                    sessionHandler.sendToOneSession(stack.pop(),objectToJsonString(eventargs));
+                    sessionHandler.sendToOneSession(stack.peek(),objectToJsonString(eventargs));
                 } catch (EncodeException e) {
                     e.printStackTrace();
                 }
@@ -225,7 +235,7 @@ public class ServerEndPoint implements IView  {
      * @returns The event handler of playerID.
      */
     @Override
-    public EventHandler getPlayerIDHandler() {
+    public GameEventHandler getPlayerIDHandler() {
         return playerID;
     }
 
@@ -235,7 +245,7 @@ public class ServerEndPoint implements IView  {
      * @returns Handler for models GameOver event.
      */
     @Override
-    public EventHandler getGameOverHandler() {
+    public GameEventHandler getGameOverHandler() {
         return gameOver;
     }
 
@@ -243,7 +253,7 @@ public class ServerEndPoint implements IView  {
      * @returns Handler for models GameAdvanced event.
      */
     @Override
-    public EventHandler getGameAdvancedHandler() {
+    public GameEventHandler getGameAdvancedHandler() {
         return gameAdvanced;
     }
 
@@ -253,7 +263,7 @@ public class ServerEndPoint implements IView  {
      * @returns Handler for models GameCreated event.
      */
     @Override
-    public EventHandler getGameCreatedHandler() {
+    public GameEventHandler getGameCreatedHandler() {
         return gameCreated;
     }
 }

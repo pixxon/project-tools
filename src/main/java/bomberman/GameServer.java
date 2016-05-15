@@ -1,13 +1,9 @@
-package bomberman.connection.demo;
+package bomberman;
 
 import bomberman.connection.ServerEndPoint;
 import org.glassfish.tyrus.server.Server;
 
-/**
- * Created by Attila on 2016. 03. 14..
- */
-public class DemoServer {
-
+public class GameServer{
     private Server server;
 
     public void runServer(int port) {

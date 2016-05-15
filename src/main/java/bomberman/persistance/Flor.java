@@ -10,5 +10,9 @@ public class Flor extends Actor{
         super(posX, posY);
         destroyable = false;
     }
-    
+        
+    @Override
+    public String toString(){
+	return "Flor";
+    }
 }
