@@ -11,14 +11,14 @@ package bomberman.util.EventArgs;
  */
 public class GameOverEventArg {
     
-	private boolean winner;
+	private int winnerID;
 
-	public GameOverEventArg(boolean winner){
-		this.winner=winner;
+	public GameOverEventArg(int winnerID){
+		this.winnerID=winnerID;
 	}
 	
-	public boolean isWinner(){
-		return winner;
+	public int getWinnerID(){
+		return winnerID;
 	}
 	
 }

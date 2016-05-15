@@ -228,7 +228,24 @@ System.out.println(newPlayer.toString());
 		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
 		gameTable.setField(p.getPosX(), p.getPosY(), a);
 		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
-			
+
+		int alive=0;
+		for(Player pp : players){
+			if(pp.isAlive()){
+				++alive;
+			}
+		}
+		if(alive==1){
+			Player winner = players.get(0);
+			for(Player pp : players){
+				winner = pp;
+				if (winner.isAlive()){
+					break;
+				}
+			}
+
+			gameOver.notifyListeners(new GameOverEventArg(winner.getPlayer_id()));
+		}	
 	}
 	
 	//endregion
@@ -330,7 +347,14 @@ System.out.println(newPlayer.toString());
 			}
 		}
 		if(alive==1){
-			//gameOver.notifyListeners(new GameOverEventArg(p.getPlayer_id()));
+			Player winner = null;
+			for(Player p : players){
+				if(p.isAlive()){
+					winner = p;
+				}
+			}
+
+			gameOver.notifyListeners(new GameOverEventArg(winner.getPlayer_id()));
 		}
 	}
 	/**
