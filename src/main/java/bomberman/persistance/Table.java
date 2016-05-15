@@ -17,6 +17,12 @@ public class Table {
     private int floorcount = 0;
     private final float fullPercent = 0.6f;
     
+	/**
+	*
+	* Table constructor with the defalt paramteres which is 15
+	*
+	*/
+	
     public Table() {
         playField = new Actor[defaultValue][defaultValue];
         size = defaultValue;
@@ -24,10 +30,23 @@ public class Table {
 
     }
 
+	
+	/**
+	*
+	* @return the size of the table
+	*
+	*/
+	
     public int GetSize(){
         return this.size;
     }
     
+	/**
+	*
+	* @param size Create a table with the given size parameter
+	*
+	*/
+	
     public Table(int size) {
         if(size < 9)
             size = 9;
@@ -38,6 +57,12 @@ public class Table {
         generateField();
 
     }
+	
+	/**
+	*
+	* Generate the playfield
+	*
+	*/
     
     private void generateField(){
         /**
@@ -145,17 +170,30 @@ public class Table {
 
     /**
      *
-     * @return 
+     * @return the generated table
      */
     public Actor[][] getPlayField(){
         return playField;
     }
     
+	
+	/**
+	*
+	* @return a field from the table on the X, Y postition
+	*
+	*/
     public Actor getField(int x, int y)
     {
         return playField[x][y];
     }
     
+	
+	/**
+	*
+	* @param X set the Actor on the X position
+	* @param Y set the Actor on the Y position
+ 	* @param replace the Actor by the actor on the given coordinates
+	*/
     public void setField(int x, int y, Actor actor)
     {
         playField[x][y] = actor;
@@ -186,10 +224,17 @@ public class Table {
                 break;
             }
         }
-players.add(p);
+		players.add(p);
         return p;
     }
     
+	/**
+	*
+	* @param id the Player with the id placing a bomb
+	*
+	*/
+	
+	
     public void PlaceBomb(int id){
         for( Player player : players )
             if (player.getPlayer_id() == id){
@@ -200,7 +245,13 @@ players.add(p);
         
     }
     
-    public void UpdateBombs(){
+	/**
+	*
+	*	Updateing the field after the player is step away from the bomb location
+	*
+	*/
+    
+	public void UpdateBombs(){
         if (!bombs.isEmpty())
             for(Player p : players){
                 if(p.isBombInQue()){
@@ -215,7 +266,13 @@ players.add(p);
                 }
             }
     }
-    
+	
+    /**
+	*
+	* @param local_bomb_id blows up the the coresponing bomb with the id, and replacing it with a Floor
+	*
+	*/
+	
     public void DestroyBomb(int local_bomb_id){
         for(Bomb b : bombs){
             if(b.getLocal_bomb_id() == local_bomb_id){
