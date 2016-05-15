@@ -82,36 +82,14 @@ public class View extends Application implements IView{
 				
 				alert.showAndWait();
 				
-				//TODO: Close application.
-				
 			}
 		};
 		
 		gameAdvanced = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
-				
 				GameAdvancedEventArg tmpAdvanced = (GameAdvancedEventArg)eventargs;
-				
-				if("Bomb".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomb.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-				}
-				if("Flor".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("floorGrass.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-				}
-				if("Obst".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("breakble.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-				}
-				if("Player".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomberangel.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-				}
-				if("Wall".equals(tmpAdvanced.getType().split(" ")[0])){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("brickWall.png").toString())
-, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-				}
-				
-				//TODO: Draw Pictures.
-				
+				labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(getBackground(tmpAdvanced.getType()));
 			}
 		};
 		
@@ -127,36 +105,18 @@ public class View extends Application implements IView{
 				for(int i = 0; i < data.getHeight(); ++i){
 					for(int j = 0; j < data.getWidth(); ++j){
 						labelGrid[i][j] = new Label();
+
 						labelGrid[i][j].setMinWidth(40);
 						labelGrid[i][j].setMaxWidth(40);
 						labelGrid[i][j].setMinHeight(40);
 						labelGrid[i][j].setMaxHeight(40);
 
-						if("Bomb".equals(data.getField(i, j))){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomb.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-							root.add(labelGrid[i][j], i, j);
-						}
-						if("Flor".equals(data.getField(i, j))){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("floorGrass.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-							root.add(labelGrid[i][j], i, j);
-						}
-						if("Obst".equals(data.getField(i, j))){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("breakble.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-							root.add(labelGrid[i][j], i, j);
-						}
-						if("Player".equals(data.getField(i, j).split(" ")[0])){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomberangel.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-							root.add(labelGrid[i][j], i, j);
-						}
-						if("Wall".equals(data.getField(i, j))){
-							labelGrid[i][j].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("brickWall.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-							root.add(labelGrid[i][j], i, j);
-						}
+						labelGrid[i][j].setBackground(getBackground(data.getField(i, j)));
+						root.add(labelGrid[i][j], i, j);
 					}
 				}
 
 				scene.setRoot(root);
-				//TODO: Set BG here too.
 			}
 		};
 
@@ -206,12 +166,22 @@ public class View extends Application implements IView{
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case UP:    model.movePlayer(iD, Direction.UP); break;
-                    case DOWN:  model.movePlayer(iD, Direction.DOWN); break;
-                    case LEFT:  model.movePlayer(iD, Direction.LEFT); break;
-                    case RIGHT: model.movePlayer(iD, Direction.RIGHT); break;
-                    case SPACE: model.placeBomb(iD); break;
+                switch (event.getText()) {
+                    case "w":
+			model.movePlayer(iD, Direction.UP);
+		break;
+                    case "s":
+			model.movePlayer(iD, Direction.DOWN);
+		break;
+                    case "a":
+			model.movePlayer(iD, Direction.LEFT);
+		break;
+                    case "d":
+			model.movePlayer(iD, Direction.RIGHT);
+		break;
+                    case "b":
+			model.placeBomb(iD);
+		break;
                 }
             }
         });
@@ -226,4 +196,31 @@ public class View extends Application implements IView{
           }
       });  
     }
+
+	private Background getBackground(String type){
+
+		Image image = null;
+
+		if("Bomb".equals(type)){
+			image = new Image(getClass().getResource("bomb.png").toString());
+		}
+		if("Flor".equals(type)){
+			image = new Image(getClass().getResource("floorGrass.png").toString());
+		}
+		if("Obst".equals(type)){
+			image = new Image(getClass().getResource("breakble.png").toString());
+		}
+		if("Player".equals(type.split(" ")[0])){
+			if(Integer.toString(iD).equals(type.split(" ")[1])){
+				image = new Image(getClass().getResource("bomberangel.png").toString());
+			}else{
+				image = new Image(getClass().getResource("bomberangel_blue.png").toString());
+			}
+		}
+		if("Wall".equals(type)){
+			image = new Image(getClass().getResource("brickWall.png").toString());
+		}
+
+		return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT));
+	}
 }

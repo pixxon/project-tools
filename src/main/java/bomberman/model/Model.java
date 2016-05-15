@@ -12,11 +12,6 @@ public class Model implements IModel{
 	private HashMap<Player, Boolean> hasPlayerPlacedBomb = null;
 	private ArrayList<Player> players = null;
 	
-	private enum Field{
-		WALL, EMPTY, PLAYER, OBSTACLE, BOMB;
-		private Field(){}
-	};
-	
 	private final int BOMB_RANGE = 2;
 	
 	
@@ -59,13 +54,11 @@ public class Model implements IModel{
 	
 	//region CONSTRUCTORS
 	public Model(){
-System.out.println("asd1");
 		gameTable = new Table();
 		Initialize();
 	}
 	
 	public Model(Table t){
-System.out.println("asd2");
 		gameTable = t;
 		Initialize();
 	}
@@ -132,9 +125,8 @@ System.out.println("asd2");
 		GameCreatedEventArg args = new GameCreatedEventArg(size,size);
 		for(int i=0;i<size;++i)
 			for(int j=0;j<size;++j){
-				args.setField(i,j,gameTable.getField(i,j).toString());
+				args.setField(i,j,FieldToActor(i,j).toString());
 			}
-		System.out.println("asd");
 		gameCreated.notifyListeners(args);
 	}
 
@@ -144,12 +136,34 @@ System.out.println("asd2");
 	 * Notifies the view about the change
 	 */
 	public void newPlayer(){
-		Player newPlayer = gameTable.AddPlayer();
+		Player newPlayer = null;
+
+		int size = gameTable.GetSize();
+		switch(players.size())
+		{
+		    case 0 : { 
+		        newPlayer = new Player(1,1);
+		        break;
+		    }
+		    case 1 : { 
+		        newPlayer = new Player(size-2,size-2);
+		        break;
+		    }
+		    case 2 : { 
+		        newPlayer = new Player(1,size-2);
+		        break;
+		    }
+		    case 3 : {  
+		        newPlayer = new Player(size-2,1);
+		        break;
+		    }
+		}
+
 		players.add(newPlayer);
 		hasPlayerPlacedBomb.put(newPlayer,false);
 		playerIdGameEvent.notifyListeners(new PlayerIDEventArg(newPlayer.getPlayer_id()));
 		gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer.toString()));
-System.out.println(newPlayer.toString());
+
 		if(players.size()==2){
 			newGame();
 		}
@@ -177,13 +191,14 @@ System.out.println(newPlayer.toString());
 			case DOWN : newX = 0; newY = 1; break;
 			case LEFT : newX = -1; newY = 0; break;
 		}
-		if(isFieldEmpty(newX, newY)){
-			Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
-			gameTable.setField(p.getPosX(), p.getPosY(), a);
-			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
+		if(isFieldEmpty(p.getPosX()+newX, p.getPosY()+newY)){
+			int posX = p.getPosX();
+			int posY = p.getPosY();
 			p.setPosX(p.getPosX()+newX);
 			p.setPosY(p.getPosY()+newY);
+			Actor a = FieldToActor(posX, posY);
 			gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), p.toString()));
+			gameAdvanced.notifyListeners(new GameAdvancedEventArg(posX, posY, a.toString()));
 		}
 	}
 	
@@ -201,9 +216,7 @@ System.out.println(newPlayer.toString());
 			return;
 		}		
 		final Bomb b = new Bomb(p.getPosX(), p.getPosY());
-		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.BOMB);
-		gameTable.setField(p.getPosX(), p.getPosY(), a);
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
+		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), b.toString()));
 		hasPlayerPlacedBomb.put(p,true);
 		placedBombs.add(b);
 		
@@ -211,7 +224,7 @@ System.out.println(newPlayer.toString());
 		t.schedule(new TimerTask(){
 			@Override
 			public void run(){
-				bombTimeOutGameEvent.notifyListeners(new BombTimeOutEventArgs(p.getPosX(), p.getPosY(),p,b));
+				bombTimeOutGameEvent.notifyListeners(new BombTimeOutEventArgs(b.getPosX(), b.getPosY(),p,b));
 			}
 		}, 2000);
 	}
@@ -225,8 +238,7 @@ System.out.println(newPlayer.toString());
 		Player p = getPlayerById(id);
 		players.remove(p);
 		hasPlayerPlacedBomb.remove(p);
-		Actor a = FieldToActor(p.getPosX(), p.getPosY(), Field.EMPTY);
-		gameTable.setField(p.getPosX(), p.getPosY(), a);
+		Actor a = FieldToActor(p.getPosX(), p.getPosY());
 		gameAdvanced.notifyListeners(new GameAdvancedEventArg(p.getPosX(), p.getPosY(), a.toString()));
 
 		int alive=0;
@@ -278,14 +290,21 @@ System.out.println(newPlayer.toString());
 	*@param f Fieldtype to convert
 	*@returns the given altype object 
 	*/
-	private Actor FieldToActor(int x, int y, Field f){
-		switch(f){
-			case EMPTY: return new Flor(x,y);
-			case WALL: return new Wall(x,y);
-			case OBSTACLE: return new Obst(x,y);
-			case BOMB: return new Bomb(x,y);
-			default: return null;
+	private Actor FieldToActor(int x, int y){
+
+		for(Bomb b: placedBombs){
+			if(b.getPosX() == x && b.getPosY() == y){
+				return b;
+			}
 		}
+
+		for(Player p: players){
+			if(p.getPosX() == x && p.getPosY() == y && p.isAlive()){
+				return p;
+			}
+		}
+
+		return gameTable.getField(x,y);
 	}
 	
 	/**
@@ -310,6 +329,11 @@ System.out.println(newPlayer.toString());
 		for(Player p : players){
 			if(p.getPosX()==x && p.getPosY()==y) return false;
 		}
+		for(Bomb b: placedBombs){
+			if(b.getPosX() == x && b.getPosY() == y){
+				return false;
+			}
+		}
 		return (gameTable.getField(x, y) instanceof Flor);
 	}
 
@@ -326,12 +350,21 @@ System.out.println(newPlayer.toString());
 		int y = args.getY();
 		
 		hasPlayerPlacedBomb.put(pp,false);
-		placedBombs.remove(b);
+		for(Player p1: players){
+			if(p1.toString() == pp.toString()){
+				hasPlayerPlacedBomb.put(p1,false);
+			}
+		}
+
+		for(Bomb b1: placedBombs){
+			if(b1.getPosX() == x && b1.getPosY() == y){
+				placedBombs.remove(b1);
+			}
+		}
 		
 		bombExplode(x,y);
-		Actor a = FieldToActor(x,y, Field.EMPTY);
-		gameTable.setField(x,y,a);
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a.toString()));
+				gameTable.setField(x,y,new Flor(x,y));
+				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,FieldToActor(x,y).toString()));
 		
 		for(int i = 1;i<= BOMB_RANGE; ++i){
 			bombExplode(x-i,y);
@@ -370,12 +403,12 @@ System.out.println(newPlayer.toString());
 			for(Player p : players){
 				if(p.getPosX()==x && p.getPosY()==y){
 					p.setAlive(false);
+					gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,FieldToActor(x,y).toString()));
 				}
 			}
 			if(gameTable.getField(x,y).isDestroyable()){
-				Actor a = FieldToActor(x,y, Field.EMPTY);
-				gameTable.setField(x,y,a);
-				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,a.toString()));
+				gameTable.setField(x,y,new Flor(x,y));
+				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,FieldToActor(x,y).toString()));
 			}
 		}
 	}

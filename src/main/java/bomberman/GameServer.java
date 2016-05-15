@@ -7,7 +7,7 @@ public class GameServer{
     private Server server;
 
     public void runServer(int port) {
-        server = new Server("localhost", port, "/bomberman",ServerEndPoint.class);
+        server = new Server("szitar.csoma.elte.hu", port, "/bomberman",ServerEndPoint.class);
 
         try {
             server.start();

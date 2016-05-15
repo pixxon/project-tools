@@ -11,8 +11,6 @@ import java.util.Random;
 public class Table {
     private Actor playField[][];
     private int defaultValue = 15;
-    private List<Player> players = new ArrayList<>();
-    private List<Bomb> bombs = new ArrayList<>();
     private int size;
     private int floorcount = 0;
     private final float fullPercent = 0.6f;
@@ -160,71 +158,5 @@ public class Table {
     {
         playField[x][y] = actor;
     }
-    
-    public Player AddPlayer(){
-        Player p = null;
-        switch(players.size())
-        {
-            case 0 : { 
-                p = new Player(1,1);
-                playField[1][1] = p;
-                break;
-            }
-            case 1 : { 
-                p = new Player(size-2,size-2);
-                playField[size-2][size-2] = p;
-                break;
-            }
-            case 2 : { 
-                p = new Player(1,size-2);
-                playField[1][size-2] = p;
-                break;
-            }
-            case 3 : {  
-                p = new Player(size-2,1);
-                playField[size-2][1] = p;
-                break;
-            }
-        }
-players.add(p);
-        return p;
-    }
-    
-    public void PlaceBomb(int id){
-        for( Player player : players )
-            if (player.getPlayer_id() == id){
-               player.PlaceBomb();
-               bombs.add(player.getBomb());
-               break;
-            }
-        
-    }
-    
-    public void UpdateBombs(){
-        if (!bombs.isEmpty())
-            for(Player p : players){
-                if(p.isBombInQue()){
-                    int bombPosX = p.getBomb().getPosX();
-                    int bombPosY = p.getBomb().getPosY();
-                    if(playField[bombPosX][bombPosY] instanceof Flor){
-                        playField[bombPosX][bombPosY] = p.getBomb();
-                        p.setBomb(null);
-                        p.setBombInQue(false);
-                        break;
-                    }
-                }
-            }
-    }
-    
-    public void DestroyBomb(int local_bomb_id){
-        for(Bomb b : bombs){
-            if(b.getLocal_bomb_id() == local_bomb_id){
-                int x = b.getPosX();
-                int y = b.getPosY();
-                playField[x][y] = new Flor(x, y);
-                bombs.remove(b);
-                break;
-            }
-        }
-    }
+
 }
