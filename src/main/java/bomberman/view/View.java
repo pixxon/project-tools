@@ -11,6 +11,7 @@ import bomberman.persistance.Bomb;
 import bomberman.persistance.Obst;
 import bomberman.persistance.Wall;
 import bomberman.persistance.Player;
+import bomberman.util.Direction;
 import bomberman.util.EventArgs.PlayerIDEventArg;
 import bomberman.util.EventArgs.GameCreatedEventArg;
 import bomberman.util.EventArgs.GameOverEventArg;
@@ -39,7 +40,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-
+import javafx.scene.input.KeyEvent;
 
 public class View extends Application implements IView{
 	private Label labelGrid[][];
@@ -200,10 +201,23 @@ public class View extends Application implements IView{
 	
 	@Override
     public void start(Stage primaryStage) {
-	this.scene = new Scene(new GridPane(), 640, 480);
+		this.scene = new Scene(new GridPane(), 640, 480);
+	
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:    model.movePlayer(iD, Direction.UP); break;
+                    case DOWN:  model.movePlayer(iD, Direction.DOWN); break;
+                    case LEFT:  model.movePlayer(iD, Direction.LEFT); break;
+                    case RIGHT: model.movePlayer(iD, Direction.RIGHT); break;
+                    case SPACE: model.placeBomb(iD); break;
+                }
+            }
+        });
 
         primaryStage.setTitle("Bomberman");
-	primaryStage.setScene(scene);
+		primaryStage.setScene(scene);
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
