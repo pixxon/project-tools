@@ -37,6 +37,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 
 
 public class View extends Application implements IView{
@@ -67,7 +69,7 @@ public class View extends Application implements IView{
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Game Over");
 				
-				if(tmpGameOver.isWinner()){
+				if(tmpGameOver.getWinnerID() == iD){
 					
 					alert.setHeaderText("Congratulations! You Won!");
 					
@@ -91,19 +93,20 @@ public class View extends Application implements IView{
 				GameAdvancedEventArg tmpAdvanced = (GameAdvancedEventArg)eventargs;
 				
 				if("Bomb".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("bomb.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomb.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				if("Flor".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("floorGrass.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("floorGrass.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				if("Obst".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("breakable.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("breakble.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				if("Player".equals(tmpAdvanced.getType())){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("bomberangel.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("bomberangel.png").toString()), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				if("Wall".equals(tmpAdvanced.getType().split(" ")[0])){
-					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image("brickWall.png"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("brickWall.png").toString())
+, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 				}
 				
 				//TODO: Draw Pictures.
@@ -202,5 +205,11 @@ public class View extends Application implements IView{
         primaryStage.setTitle("Bomberman");
 	primaryStage.setScene(scene);
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+          public void handle(WindowEvent we) {
+              model.leavePlayer(iD);
+          }
+      });  
     }
 }
