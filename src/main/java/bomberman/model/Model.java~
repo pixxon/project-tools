@@ -335,7 +335,7 @@ public class Model implements IModel{
 	private boolean isFieldEmpty(int x, int y){
 		if(!inRange(x, y)) return false;
 		for(Player p : players){
-			if(p.isAlive() && p.getPosX()==x && p.getPosY()==y) return false;
+			if(p.getPosX()==x && p.getPosY()==y) return false;
 		}
 		for(Bomb b: placedBombs){
 			if(b.getPosX() == x && b.getPosY() == y){
