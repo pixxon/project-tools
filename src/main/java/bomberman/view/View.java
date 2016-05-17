@@ -27,6 +27,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage; 
@@ -53,6 +54,21 @@ public class View extends Application implements IView{
 	private int iD;
 	private Scene scene;
 	
+	class Updater implements Runnable{
+		private Scene scene;
+		private Pane root;
+		
+		public Updater(Scene scene, Pane root){
+			this.scene = scene;
+			this.root = root;
+		}
+		
+		@Override
+		public void run(){  
+			scene.setRoot(root);
+		}
+	}
+	
 	public View(){
 		playerID = new GameEventHandler(){
 			@Override
@@ -66,21 +82,36 @@ public class View extends Application implements IView{
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
 				GameOverEventArg tmpGameOver = (GameOverEventArg)eventargs;
-				
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Game Over");
-				
+				System.out.println("a");
 				if(tmpGameOver.getWinnerID() == iD){
 					
-					alert.setHeaderText("Congratulations! You Won!");
+					Platform.runLater(new Runnable(){
+						@Override
+						public void run(){
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Game Over");
+							alert.setHeaderText("Congratulations! You Won!");
+							
+							alert.showAndWait();
+							System.exit(0);
+						}
+					});
 					
 				}else{
 					
-					alert.setHeaderText("Maybe next time :(");
-					
+					Platform.runLater(new Runnable(){
+						@Override
+						public void run(){
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Game Over");
+							alert.setHeaderText("Maybe next time :(");
+							
+							alert.showAndWait();
+							System.exit(0);
+						}
+					});
 				}
 				
-				alert.showAndWait();
 				
 			}
 		};
@@ -89,7 +120,8 @@ public class View extends Application implements IView{
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
 				GameAdvancedEventArg tmpAdvanced = (GameAdvancedEventArg)eventargs;
-				labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(getBackground(tmpAdvanced.getType()));
+				if(tmpAdvanced.getX() < labelGrid.length && tmpAdvanced.getY() < labelGrid[tmpAdvanced.getX()].length)
+					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(getBackground(tmpAdvanced.getType()));
 			}
 		};
 		
@@ -115,8 +147,8 @@ public class View extends Application implements IView{
 						root.add(labelGrid[i][j], i, j);
 					}
 				}
-
-				scene.setRoot(root);
+				
+				Platform.runLater(new Updater(scene, root));
 			}
 		};
 
@@ -161,7 +193,7 @@ public class View extends Application implements IView{
 	
 	@Override
     public void start(Stage primaryStage) {
-		this.scene = new Scene(new GridPane(), 640, 480);
+		this.scene = new Scene(new GridPane(), 600, 600);
 	
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
