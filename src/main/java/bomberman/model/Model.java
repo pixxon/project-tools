@@ -170,7 +170,7 @@ public class Model implements IModel{
 		players.add(newPlayer);
 		hasPlayerPlacedBomb.put(newPlayer,false);
 		playerIdGameEvent.notifyListeners(new PlayerIDEventArg(newPlayer.getPlayer_id()));
-		gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer.toString()));
+		//gameAdvanced.notifyListeners(new GameAdvancedEventArg(newPlayer.getPosX(), newPlayer.getPosY(), newPlayer.toString()));
 
 		if(players.size()==2){
 			newGame();
