@@ -25,7 +25,7 @@ public class Hello{
 	 *
 	 * @throws IOException When can not open System.in.
      */
-    public static void main(String[]) throws IOException {
+    public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Server or client?");
@@ -55,7 +55,7 @@ public class Hello{
 			System.out.println("Port?");
 			Integer port = Integer.parseInt(br.readLine());
 
-			client.runClient("ws://" + ip.toString() ":" + port.toString() + "/bomberman/game");
+			client.runClient("ws://" + ip.toString() + ":" + port.toString() + "/bomberman/game");
 		}
     }
 }
