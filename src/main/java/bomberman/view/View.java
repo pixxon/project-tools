@@ -43,33 +43,109 @@ import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * The main interface between the user and the program.
+ *
+ * <p>
+ *     Using JavaFX the class creates a graphic user interface which is updated on movements.
+ *     Handles keyboard events so they can be transmitted to the {@link bomberman.model.Model}.
+ * </p>
+ */
 public class View extends Application implements IView{
+	/**
+	 * The address of the server.
+	 */
+	public static String connectionAddress;
+
+	/**
+	 * A grid containing the shown {@link javafx.}
+	 */
 	private Label labelGrid[][];
+
+	/**
+	 * Contains the ID given by the server.
+	 */
 	private GameEventHandler playerID;
+
+	/**
+	 * Signals that the game ended.
+	 */
 	private GameEventHandler gameOver;
+
+	/**
+	 * Signals to refresh the scene.
+	 */
 	private GameEventHandler gameAdvanced;
+
+	/**
+	 * Signal that the game begun.
+	 */
 	private GameEventHandler gameCreated;
 
+	/**
+	 * Model where the user input is transmitted to.
+	 */
 	private IModel model;
+
+	/**
+	 * ID of the player, given by the server.
+	 */
 	private int iD;
+
+	/**
+	 * The visible scene.
+	 */
 	private Scene scene;
-	
+
+	/**
+	 * Inner class to update the scene on JavaFX thread.
+	 *
+	 * <p>
+	 *     Implements {@link Runnable} so it can be executed on another thread.
+	 * </p>
+	 */
 	class Updater implements Runnable{
+		/**
+		 * The visible scene
+		 */
 		private Scene scene;
+		/**
+		 * The new layout.
+		 */
 		private Pane root;
-		
+
+		/**
+		 * Sets the variables to the given ones.
+		 *
+		 * @param scene The visible scene
+         * @param root The new layout
+         */
 		public Updater(Scene scene, Pane root){
 			this.scene = scene;
 			this.root = root;
 		}
-		
+
+		/**
+		 * Overrides run method, so it can be executed on a different thread.
+		 */
 		@Override
 		public void run(){  
 			scene.setRoot(root);
 		}
 	}
-	
+
+	/**
+	 * Sets up the needed {@link GameEventHandler}s and connects them to the {@link IModel}.
+	 *
+	 * <p>
+	 *     The EventHandlers are anonymous inner classes.
+	 *     They just override the actionPerformed method.
+	 * </p>
+	 */
 	public View(){
+		/**
+		 * Sets the iD to the given one.
+		 */
 		playerID = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
@@ -77,7 +153,10 @@ public class View extends Application implements IView{
 				iD = tmPlayerID.getID();
 			}
 		};
-		
+
+		/**
+		 * Shows the endgame result in a pop-up window.
+		 */
 		gameOver = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
@@ -115,7 +194,10 @@ public class View extends Application implements IView{
 				
 			}
 		};
-		
+
+		/**
+		 * Changes the given field to the new one.
+		 */
 		gameAdvanced = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
@@ -124,7 +206,10 @@ public class View extends Application implements IView{
 					labelGrid[tmpAdvanced.getX()][tmpAdvanced.getY()].setBackground(getBackground(tmpAdvanced.getType()));
 			}
 		};
-		
+
+		/**
+		 * Creates a new grid from the given matrix.
+		 */
 		gameCreated = new GameEventHandler(){
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
@@ -151,84 +236,122 @@ public class View extends Application implements IView{
 				Platform.runLater(new Updater(scene, root));
 			}
 		};
-
-		
-		model = new ClientEndPoint();
-        	model.getGameAdvanced().addListener(getGameAdvancedHandler());
-        	model.getGameCreated().addListener(getGameCreatedHandler());
-        	model.getGameOver().addListener(getGameOverHandler());
-        	model.getPlayerID().addListener(getPlayerIDHandler());
-		
-
-		ClientManager client = ClientManager.createClient();
-		try {
-		    client.connectToServer(model, new URI("ws://localhost:3000/bomberman/game"));
-
-		} catch (DeploymentException | URISyntaxException  e) {
-		    throw new RuntimeException(e);
-		}
-
-		model.newPlayer();
 	}
-	
+
+	/**
+	 * Getter for playerIDHandler.
+	 * @return Reference to the playerIDHandler.
+     */
 	@Override
 	public GameEventHandler getPlayerIDHandler(){
 		return playerID;
 	}
-	
+
+	/**
+	 * Getter for gameOverHandler.
+	 * @return Reference to the gameOverHandler.
+     */
 	@Override
 	public GameEventHandler getGameOverHandler(){
 		return gameOver;
 	}
-	
+
+	/**
+	 * Getter for gameAdvancedHandler.
+	 * @return Reference to the gameOverHandler.
+     */
 	@Override
 	public GameEventHandler getGameAdvancedHandler(){
 		return gameAdvanced;
 	}
-	
+
+	/**
+	 * Getter for gameCreatedHandler.
+	 * @return Reference to the gameCreatedHandler.
+     */
 	@Override
 	public GameEventHandler getGameCreatedHandler(){
 		return gameCreated;
 	}
-	
+
+	/**
+	 * Main enty point of the JavaFX application.
+	 *
+	 * <p>
+	 *     Creates a new scene and
+	 * </p>
+	 *
+	 * @param primaryStage The stage where it can draw.
+     */
 	@Override
     public void start(Stage primaryStage) {
-		this.scene = new Scene(new GridPane(), 600, 600);
-	
+		model = new ClientEndPoint();
+		model.getGameAdvanced().addListener(getGameAdvancedHandler());
+		model.getGameCreated().addListener(getGameCreatedHandler());
+		model.getGameOver().addListener(getGameOverHandler());
+		model.getPlayerID().addListener(getPlayerIDHandler());
+
+		ClientManager client = ClientManager.createClient();
+		try {
+			client.connectToServer(model, new URI("ws://" + connectionAddress +"/bomberman/game"));
+
+		} catch (DeploymentException | URISyntaxException  e) {
+			throw new RuntimeException(e);
+		}
+
+		model.newPlayer();
+
+		/**
+		 * Handles KeyEvents and transmits it to the model.
+		 */
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getText()) {
                     case "w":
-			model.movePlayer(iD, Direction.UP);
-		break;
+						model.movePlayer(iD, Direction.UP);
+					break;
                     case "s":
-			model.movePlayer(iD, Direction.DOWN);
-		break;
+						model.movePlayer(iD, Direction.DOWN);
+					break;
                     case "a":
-			model.movePlayer(iD, Direction.LEFT);
-		break;
+						model.movePlayer(iD, Direction.LEFT);
+					break;
                     case "d":
-			model.movePlayer(iD, Direction.RIGHT);
-		break;
+						model.movePlayer(iD, Direction.RIGHT);
+					break;
                     case "b":
-			model.placeBomb(iD);
-		break;
+						model.placeBomb(iD);
+					break;
                 }
             }
         });
 
+		this.scene = new Scene(new GridPane(), 600, 600);
         primaryStage.setTitle("Bomberman");
 		primaryStage.setScene(scene);
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-          public void handle(WindowEvent we) {
-              model.leavePlayer(iD);
-          }
-      });  
+		/**
+		 * Handles application close.
+		 */
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+          	public void handle(WindowEvent we){
+              	model.leavePlayer(iD);
+          	}
+      	});
     }
 
+	/**
+	 * Private method to get the right image from resources.
+	 *
+	 * <p>
+	 *     The resources must be next to the class.
+	 * </p>
+	 *
+	 * @param type Name of the resource.
+	 * @return Background containing the needed image.
+     */
 	private Background getBackground(String type){
 
 		Image image = null;
