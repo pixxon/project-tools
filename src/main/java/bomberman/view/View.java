@@ -293,7 +293,7 @@ public class View extends Application implements IView{
 
 		ClientManager client = ClientManager.createClient();
 		try {
-			client.connectToServer(model, new URI("ws://" + connectionAddress +"/bomberman/game"));
+			client.connectToServer(model, new URI(connectionAddress));
 
 		} catch (DeploymentException | URISyntaxException  e) {
 			throw new RuntimeException(e);
