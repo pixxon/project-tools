@@ -301,6 +301,7 @@ public class View extends Application implements IView{
 
 		model.newPlayer();
 
+		this.scene = new Scene(new GridPane(), 600, 600);
 		/**
 		 * Handles KeyEvents and transmits it to the model.
 		 */
@@ -327,7 +328,6 @@ public class View extends Application implements IView{
             }
         });
 
-		this.scene = new Scene(new GridPane(), 600, 600);
         primaryStage.setTitle("Bomberman");
 		primaryStage.setScene(scene);
         primaryStage.show();
