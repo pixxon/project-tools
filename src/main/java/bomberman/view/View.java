@@ -161,7 +161,6 @@ public class View extends Application implements IView{
 			@Override
 			public void actionPerformed(Object sender, Object eventargs){
 				GameOverEventArg tmpGameOver = (GameOverEventArg)eventargs;
-				System.out.println("a");
 				if(tmpGameOver.getWinnerID() == iD){
 					
 					Platform.runLater(new Runnable(){
