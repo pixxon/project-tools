@@ -364,9 +364,10 @@ public class Model implements IModel{
 			}
 		}
 
-		for(Bomb b1: placedBombs){
-			if(b1.getPosX() == x && b1.getPosY() == y){
-				placedBombs.remove(b1);
+		for (Iterator<Bomb> iterator = placedBombs.iterator(); iterator.hasNext(); ) {
+			Bomb bomb = iterator.next();
+			if(bomb.getPosX() == x && bomb.getPosY() == y){
+				iterator.remove();
 			}
 		}
 		
@@ -374,11 +375,20 @@ public class Model implements IModel{
 				gameTable.setField(x,y,new Flor(x,y));
 				gameAdvanced.notifyListeners(new GameAdvancedEventArg(x,y,FieldToActor(x,y).toString()));
 		
-		for(int i = 1;i<= BOMB_RANGE; ++i){
-			bombExplode(x-i,y);
-			bombExplode(x+i,y);
-			bombExplode(x,y-i);
-			bombExplode(x,y+i);			
+		for(int i = 1;i<= BOMB_RANGE && !(gameTable.getField(x-i, y) instanceof Wall); ++i){
+			bombExplode(x-i,y);		
+		}
+		
+		for(int i = 1;i<= BOMB_RANGE && !(gameTable.getField(x+i, y) instanceof Wall); ++i){
+			bombExplode(x+i,y);	
+		}
+		
+		for(int i = 1;i<= BOMB_RANGE && !(gameTable.getField(x, y-i) instanceof Wall); ++i){
+			bombExplode(x,y-i);	
+		}
+		
+		for(int i = 1;i<= BOMB_RANGE && !(gameTable.getField(x, y+i) instanceof Wall); ++i){
+			bombExplode(x,y+i);	
 		}
 		
 		int alive=0;
